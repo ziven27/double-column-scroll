@@ -16,13 +16,14 @@
 <script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from 'vue'
 
+// @ts-ignore
 const getRenderData = ({data = [], getHeight}) => {
-  const dataLeft = [];
-  const dataRight = [];
+  const dataLeft: any = [];
+  const dataRight: any = [];
   let anchorHeight = 0;
 
   // 默认单数往左，双数往右
-  const defaultFilter = (item, key) => {
+  const defaultFilter = (item: { id: String }, key: number) => {
     if (key % 2 === 0) {
       console.log(`${item.id}, ${key}为双数，渲染到左边`);
       dataLeft.push(item);
@@ -33,7 +34,7 @@ const getRenderData = ({data = [], getHeight}) => {
   };
 
   // 基于用户返回的高度去决定渲染位置
-  const anchorFilter = (item) => {
+  const anchorFilter = (item: { id: String }) => {
     const height = getHeight(item);
     if (anchorHeight > 0) {
       console.log(`${item.id}, ${anchorHeight} > 0, 渲染到右边, ${anchorHeight} - ${height} = ${anchorHeight - height}`);
@@ -75,8 +76,10 @@ export default defineComponent({
     }
   },
   setup: (props) => {
+    // @ts-ignore
     const state = reactive(getRenderData(props));
     watch(() => props.data, () => {
+      // @ts-ignore
       const {dataLeft, dataRight} = getRenderData(props);
       state.dataLeft = dataLeft;
       state.dataRight = dataRight;

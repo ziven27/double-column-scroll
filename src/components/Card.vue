@@ -5,26 +5,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated, onUnmounted } from 'vue'
+import {defineComponent, onMounted, onUnmounted, onUpdated} from 'vue'
+
 export default defineComponent({
   name: 'Card',
   props: {
-    data:{
+    data: {
       type: Object,
-      default: ()=>{}
+      default: () => {
+      }
     }
   },
   setup: (props) => {
 
     const text = props.data.id;
     onMounted(() => {
-      console.log(text,'mounted!')
+      console.log(text, 'mounted!')
     })
     onUpdated(() => {
       console.log(text, 'updated!')
     })
     onUnmounted(() => {
-      console.log(text,'unmounted!')
+      console.log(text, 'unmounted!')
     })
 
     // const renderRun=(str)=> {
@@ -38,10 +40,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .card{
-    outline: 1px solid red;
-    word-break: break-all;
-    min-height: 100px;
-    margin-bottom: 8px;
-  }
+.card {
+  outline: 1px solid red;
+  word-break: break-all;
+  min-height: 100px;
+  margin-bottom: 8px;
+}
 </style>

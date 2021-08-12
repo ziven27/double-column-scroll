@@ -10,12 +10,12 @@
       <button type="button" @click="appendData">添加数据</button>
     </div>
   </div>
-  <List v-if="tabType===TAB_TYPE.HEIGHT" :data="data" #="{ item, index }"
-        :getHeight="dataItem => Number(dataItem.height)" keyName="id">
+  <List v-if="tabType===TAB_TYPE.HEIGHT" :data="data" #="{ item }"
+        :getHeight="getHeight" keyName="id">
     <Card :data="item"/>
   </List>
   <!-- 区别就在于是否定义了 getHeight 这个方法 -->
-  <List v-if="tabType===TAB_TYPE.KEY" :data="data" #="{ item, index }" keyName="id">
+  <List v-if="tabType===TAB_TYPE.KEY" :data="data" #="{ item }" keyName="id">
     <Card :data="item"/>
   </List>
 </template>
@@ -64,12 +64,15 @@ export default defineComponent({
     }
 
     // 修改类型
+    // @ts-ignore
     const changeOrderType = (e) => {
       state.tabType = e.target.value;
       state.data = getRandomData();
     }
 
-    return {...toRefs(state), appendData, TAB_TYPE, changeOrderType}
+    const getHeight = (item:{height:unknown}) => Number(item.height);
+
+    return {...toRefs(state), appendData, TAB_TYPE, changeOrderType, getHeight}
   }
 })
 </script>
@@ -97,9 +100,11 @@ html, body {
   display: flex;
   align-items: center;
 }
-.header p{
+
+.header p {
   margin: 0;
 }
+
 .header select {
   margin-right: 8px;
 }
