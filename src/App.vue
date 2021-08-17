@@ -1,32 +1,32 @@
 <template>
   <div class="header-wrap">
     <div class="header">
-      <select @change="changeOrderType">
-        <option value="height">按高度排序</option>
-        <option value="key">按索引排序</option>
-      </select>
-      <p v-if="tabType===TAB_TYPE.HEIGHT">按照每个子模块高度动态计算</p>
-      <p v-if="tabType===TAB_TYPE.KEY">单数往左双数往右</p>
-      <button type="button" @click="appendData">添加数据</button>
+      <div class="df aic jcsb mb8">
+        <select @change="changeOrderType">
+          <option value="height">按高度排序 (优化后)</option>
+          <option value="key">按索引排序 (优化前)</option>
+        </select>
+        <p v-if="tabType===TAB_TYPE.HEIGHT">按照每个子模块高度排序</p>
+        <p v-if="tabType===TAB_TYPE.KEY">单数往左双数往右</p>
+      </div>
+      <div class="df aic">
+        每次添加：
+        <input type="number" v-model="appendNumber">
+        <button type="button" @click="appendData">添加数据</button>
+      </div>
     </div>
   </div>
-  <List v-if="tabType===TAB_TYPE.HEIGHT" :data="data" #="{ item }"
-        :getHeight="getHeight" keyName="id">
-    <Card :data="item"/>
-  </List>
-  <!-- 区别就在于是否定义了 getHeight 这个方法 -->
-  <List v-if="tabType===TAB_TYPE.KEY" :data="data" #="{ item }" keyName="id">
-    <Card :data="item"/>
-  </List>
+  <demo-new v-if="tabType===TAB_TYPE.HEIGHT" :data="data" />
+  <demo-old v-if="tabType===TAB_TYPE.KEY" :data="data" />
 </template>
 
 <script lang="ts">
 import {defineComponent, nextTick, reactive, toRefs} from 'vue'
-import Card from "./components/Card.vue";
-import List from "./components/List.vue";
+import DemoOld from "./components/DemoOld.vue";
+import DemoNew from "./components/DemoNew.vue";
 
 // 创建随机的数据
-const getRandomData = (length = 3) => {
+const getRandomData = (length = 10) => {
   const result = [];
   for (let i = 0; i < length; i++) {
     result.push({
@@ -42,21 +42,28 @@ enum TAB_TYPE {
   KEY = 'key'
 }
 
+type TYPE_STATE = {
+  data: any[]
+  tabType:TAB_TYPE
+  appendNumber: number
+}
+
 export default defineComponent({
   name: 'App',
   components: {
-    Card,
-    List
+    DemoOld,
+    DemoNew
   },
   setup: () => {
-    const state = reactive({
-      data: getRandomData(),
-      tabType: TAB_TYPE.HEIGHT
+    const state = reactive<TYPE_STATE>({
+      data: [],
+      tabType: TAB_TYPE.HEIGHT,
+      appendNumber: 10
     })
 
     // 添加随机数据
     const appendData = () => {
-      state.data = [...state.data, ...getRandomData()];
+      state.data = [...state.data, ...getRandomData(state.appendNumber)];
       nextTick(() => {
         // 滚动到底部
         window.scrollTo(0, document.documentElement.scrollHeight);
@@ -67,12 +74,10 @@ export default defineComponent({
     // @ts-ignore
     const changeOrderType = (e) => {
       state.tabType = e.target.value;
-      state.data = getRandomData();
+      state.data = getRandomData(state.appendNumber);
     }
 
-    const getHeight = (item:{height:unknown}) => Number(item.height);
-
-    return {...toRefs(state), appendData, TAB_TYPE, changeOrderType, getHeight}
+    return {...toRefs(state), appendData, TAB_TYPE, changeOrderType}
   }
 })
 </script>
@@ -82,10 +87,23 @@ html, body {
   /* 平滑滚动 */
   scroll-behavior: smooth;
 }
+
+.df{
+  display: flex;
+}
+.aic{
+  align-items: center;
+}
+.jcsb{
+  justify-content: space-between;
+}
+.mb8{
+  margin-bottom: 8px;
+}
 </style>
 <style scoped>
 .header-wrap {
-  height: 50px;
+  height: 80px;
 }
 
 .header {
@@ -97,8 +115,6 @@ html, body {
   padding: 8px;
   background-color: #ffffff;
   border-bottom: 1px solid #ccc;
-  display: flex;
-  align-items: center;
 }
 
 .header p {

@@ -1,11 +1,14 @@
 <template>
   <div class="card" :style="{height: data.height+'px'}">
-    {{ data.id }}
+    <div>
+      {{ data.id }}
+    </div>
+    <div>{{ bigNumber }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted, onUpdated} from 'vue'
+import {defineComponent, computed, onMounted, onUpdated, onUnmounted} from 'vue'
 
 export default defineComponent({
   name: 'Card',
@@ -16,25 +19,23 @@ export default defineComponent({
       }
     }
   },
-  setup: (props) => {
+  setup: () => {
 
-    const text = props.data.id;
-    onMounted(() => {
-      console.log(text, 'mounted!')
-    })
-    onUpdated(() => {
-      console.log(text, 'updated!')
-    })
-    onUnmounted(() => {
-      console.log(text, 'unmounted!')
-    })
+    function go(n:number) {
+      var item = 0;      // 这里执行了一次
+      for (var i = 0; i < n; i++) {   //这里执行了N次
+        for (var j = 0; j < n; j++) {     //这里执行了n*n次
+          item = item + i + j;     //这里执行了n*n次
+        }
+      }
+      return item;  //这里执行了一次
+    }
 
-    // const renderRun=(str)=> {
-    //   // console.log('renderRun', str);
-    //   return str;
-    // };
+    const bigNumber = computed(()=> go(2000));
 
-    return {}
+    return {
+      bigNumber
+    }
   }
 })
 </script>
