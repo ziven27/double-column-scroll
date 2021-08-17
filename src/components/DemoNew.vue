@@ -1,11 +1,11 @@
 <template>
   <List :data="data" #="{ item }" :get-item-height="getHeight" >
-    <Card :key="item.id" :data="item"/>
+    <Card :key="item?.id" :data="item"/>
   </List>
 </template>
 
 <script lang="ts">
-import {defineComponent, nextTick, onBeforeUpdate, onUnmounted, onUpdated} from 'vue'
+import {defineComponent, nextTick, onBeforeUpdate, onUnmounted, onUpdated, PropType} from 'vue'
 import Card from "./Card.vue";
 import List from "./List.vue";
 
@@ -17,7 +17,7 @@ export default defineComponent({
   },
   props:{
     data:{
-      type:Array,
+      type: Array as PropType<any[]>,
       default:()=>{}
     }
   },

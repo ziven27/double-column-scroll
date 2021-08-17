@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import {
-  defineComponent, reactive, toRef, watch
+  defineComponent, PropType, reactive, toRef, watch
 } from 'vue'
 
 
@@ -34,7 +34,7 @@ export default defineComponent({
   props: {
     /*数据源*/
     data: {
-      type: Array,
+      type: Array as PropType<any[]>,
       default: () => []
     },
 

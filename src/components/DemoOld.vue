@@ -1,11 +1,11 @@
 <template>
   <dual-column>
-    <Card v-for="item in data" :key="item.id" :data="item"/>
+    <Card v-for="item in data" :key="item?.id" :data="item"/>
   </dual-column>
 </template>
 
 <script lang="ts">
-import {defineComponent, nextTick, onBeforeUpdate, onUnmounted, onUpdated} from 'vue'
+import {defineComponent, nextTick, onBeforeUpdate, onUnmounted, onUpdated, PropType} from 'vue'
 import Card from "./Card.vue";
 import DualColumn from "./DualColumn.vue";
 
@@ -17,7 +17,7 @@ export default defineComponent({
   },
   props:{
     data:{
-      type:Array,
+      type: Array as PropType<any[]>,
       default:()=>{}
     }
   },
